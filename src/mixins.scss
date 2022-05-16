@@ -1,0 +1,22 @@
+@import "variables";
+@mixin select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-align: center;
+  padding: 0.25em 2em 0.25em 0.5em;
+  background-color: $primary-color;
+  color: $primary-text-color;
+  border-radius: 0.5em;
+  background-image: url("~/src/assets/dropdown.svg");
+  background-repeat: no-repeat;
+  background-position: center right 0.5em;
+  background-size: 1em;
+}
+
+@mixin button {
+  padding: 0.25em 0.5em;
+  background-color: $primary-color;
+  color: $primary-text-color;
+  border-radius: 0.5em;
+}

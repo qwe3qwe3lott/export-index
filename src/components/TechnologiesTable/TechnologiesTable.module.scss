@@ -1,0 +1,9 @@
+@import "../../variables";
+.container {
+  border-top: 1px $primary-color solid;
+  padding: 2em 3em;
+  color: $primary-color;
+  @media (max-width: 600px) {
+    padding: 1.5em 1em;
+  }
+}

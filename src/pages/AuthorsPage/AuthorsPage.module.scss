@@ -1,0 +1,65 @@
+@import "../../variables";
+.title {
+  text-align: center;
+  font-size: 1.6em;
+  padding: 1em 0;
+  color: $secondary-color;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+  gap: 1em;
+  padding: 0 1em 1em 1em;
+}
+.card {
+  padding: 1.5em;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  height: fit-content;
+}
+.card::after, .card::before {
+  content: '';
+  width: calc(100% - 0.5em);
+  height: calc(100% - 0.5em);
+  position: absolute;
+  display: block;
+  border: 0.1em solid $primary-color;
+  border-radius: 3em;
+  pointer-events: none;
+}
+.card::after {
+  top: 0;
+  left: 0;
+}
+.card::before {
+  top: 0.5em;
+  left: 0.5em;
+}
+.cardImage {
+  width: 10em;
+  height: 10em;
+  align-self: center;
+}
+.cardTitle {
+  color: $secondary-color;
+  font-size: 1.4em;
+}
+.cardList {
+  padding-left: 1em;
+}
+.cardListItem {
+  text-align: justify;
+  list-style: disc outside;
+  margin: 0.5em 0;
+}
+.cardText {
+  text-align: justify;
+}
+.cardLink {
+  text-decoration: underline !important;
+}
