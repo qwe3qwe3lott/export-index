@@ -1,0 +1,65 @@
+@import "../../variables";
+@import "../../mixins";
+.container {
+  border-top: 1px $primary-color solid;
+  padding: 0.5em 1em 0 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  font-size: 0.8em;
+}
+.pageInfo {
+
+}
+.tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+.rowsPickerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+}
+.rowsPickerLabel {
+
+}
+.rowsPicker {
+  @include select;
+  color: $primary-color;
+  background-color: unset;
+  background-image: url("~/src/assets/dropdown-primary.svg");
+}
+.pageChooserContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1em;
+  width: 7em;
+}
+.pageChooser {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: fit-content;
+  text-align: center;
+}
+.pageChooserButton {
+  @include button;
+  height: 1em;
+  width: 1em;
+  border-radius: 0.3em;
+  background-image: url("~/src/assets/dropdown.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 0.7em;
+}
+.pageChooserPrevious {
+  transform: rotate(90deg);
+}
+.pageChooserNext {
+  transform: rotate(-90deg);
+}

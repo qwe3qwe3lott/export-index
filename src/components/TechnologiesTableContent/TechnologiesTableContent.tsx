@@ -2,10 +2,11 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 
 import styles from './TechnologiesTableContent.module.scss';
 import {ColumnModes, ColumnSetup, ColumnWidthMetrics} from '../../types/ColumnSetup';
-import {useAppSelector} from '../../hooks/typedReduxHooks';
+import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
 
-import scssVariables from '../../index.scss';
+import scssVariables from '../../variables.scss';
 import {Technology} from '../../types/Technology';
+import {setChosenTechnology} from '../../store/slices/tables';
 
 type Props = {
 	columnSetups: ColumnSetup<Technology>[]
@@ -15,6 +16,8 @@ const TechnologiesTableContent: React.FC<Props> = ({columnSetups}) => {
 	const technologies = useAppSelector(state => state.tables.technologies);
 	const currentPage = useAppSelector(state => state.tables.currentTechnologiesPage);
 	const rowsPerPage = useAppSelector(state => state.tables.rowsPerTechnologiesPage);
+
+	const dispatch = useAppDispatch();
 
 	const getColumnWidth = useCallback((setup: ColumnSetup<Technology>) => {
 		return setup.width ? { 'minWidth': `${setup.width.value}${ColumnWidthMetrics[setup.width.metric]}` } : { width: '100%' };
@@ -55,8 +58,11 @@ const TechnologiesTableContent: React.FC<Props> = ({columnSetups}) => {
 	}, []);
 
 	return(<ul className={styles.container} ref={listRef}>
-		<li/>
-		{currentTechnologies.map(technology => <li key={technology.id} className={styles.element}>
+		{currentTechnologies.map(technology => <li
+			key={technology.id}
+			className={[styles.element, (technology.products.length > 0 ? styles.clickableElement : undefined)].join(' ')}
+			onClick={() => dispatch(setChosenTechnology(technology))}
+		>
 			{columnSetups.map(columnSetup => <span
 				key={columnSetup.title}
 				className={styles.span}

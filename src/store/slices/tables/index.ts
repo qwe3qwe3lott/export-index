@@ -4,6 +4,7 @@ import {Technology} from '../../../types/Technology';
 import {RootState} from '../../index';
 import {SortSetup} from '../../../types/SortSetup';
 import {Country} from '../../../types/Country';
+import {Product} from '../../../types/Product';
 
 const initialState: TablesState = {
 	countries: [],
@@ -12,10 +13,14 @@ const initialState: TablesState = {
 	chosenYear: 0,
 
 	technologies: [],
-	chosenTechnology: null,
 	currentTechnologiesPage: 1,
 	rowsPerTechnologiesPage: RowsPerPage.FEW,
-	technologiesSortSetup: { property: 'index', sortAtoZ: false }
+	technologiesSortSetup: { property: 'index', sortAtoZ: false },
+
+	chosenTechnology: null,
+	currentProductsPage: 1,
+	rowsPerProductsPage: RowsPerPage.FEW,
+	productsSortSetup: { property: 'id', sortAtoZ: true }
 };
 
 const tablesSlice = createSlice({
@@ -25,8 +30,15 @@ const tablesSlice = createSlice({
 		setChosenYear(state, action: PayloadAction<number>) {
 			state.chosenYear = action.payload;
 		},
-		setChosenTechnology(state, action: PayloadAction<Technology>) {
+		setChosenTechnology(state, action: PayloadAction<Technology | null>) {
+			if (!action.payload) {
+				state.chosenTechnology = null;
+				return;
+			}
+			if (action.payload.products.length === 0) return;
 			state.chosenTechnology = action.payload;
+			state.currentProductsPage = 1;
+			state.productsSortSetup = { property: 'id', sortAtoZ: true };
 		},
 		setChosenCountry(state, action: PayloadAction<number>) {
 			const country = state.countries.find(country => country.id === action.payload);
@@ -57,6 +69,26 @@ const tablesSlice = createSlice({
 				state.technologies = state.technologies.sort((a, b) => action.payload.sortAtoZ ? a.products.length - b.products.length : b.products.length - a.products.length);
 				break;
 			}
+		},
+		setRowsPerProductsPage(state, action: PayloadAction<RowsPerPage>) {
+			state.rowsPerProductsPage = action.payload;
+			state.currentProductsPage = 1;
+		},
+		setProductsCurrentPage(state, action: PayloadAction<number>) {
+			state.currentProductsPage = action.payload;
+		},
+		setProductsSortSetup(state, action: PayloadAction<SortSetup<Product>>) {
+			if (!state.chosenTechnology) return;
+			state.productsSortSetup = action.payload;
+			switch (action.payload.property) {
+			case 'title':
+				state.chosenTechnology.products = state.chosenTechnology.products.sort((a, b) => {
+					if (a.title < b.title) return action.payload.sortAtoZ ? -1 : 1;
+					if (a.title > b.title) return action.payload.sortAtoZ ? 1 : -1;
+					return 0;
+				});
+				break;
+			}
 		}
 	},
 	extraReducers(builder) {
@@ -69,6 +101,8 @@ const tablesSlice = createSlice({
 			}))
 			.addCase(fetchTechnologies.fulfilled, ((state, action) => {
 				state.technologies = action.payload;
+				state.currentTechnologiesPage = 1;
+				state.technologiesSortSetup = { property: 'index', sortAtoZ: false };
 			}));
 	}
 });
@@ -112,5 +146,6 @@ export const fetchTechnologies = createAsyncThunk<Technology[], undefined, {stat
 	}
 );
 
-export const {setChosenTechnology, setChosenCountry, setChosenYear, setRowsPerTechnologiesPage, setTechnologiesCurrentPage, setTechnologiesSortSetup} = tablesSlice.actions;
+export const {setChosenTechnology, setChosenCountry, setChosenYear, setRowsPerTechnologiesPage,
+	setTechnologiesCurrentPage, setTechnologiesSortSetup, setRowsPerProductsPage, setProductsCurrentPage, setProductsSortSetup} = tablesSlice.actions;
 export default tablesSlice.reducer;

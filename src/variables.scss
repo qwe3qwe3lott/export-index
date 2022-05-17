@@ -7,3 +7,9 @@ $section-background-color: #E9E7E7;
 
 $header-background-color: $primary-color;
 $header-text-color: $primary-text-color;
+
+:export {
+  primaryColor: $primary-color;
+  seconradyColor: $secondary-color;
+  secondaryOppositeColor: $secondary-opposite-color;
+}

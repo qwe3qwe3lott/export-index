@@ -1,6 +1,7 @@
 import {Technology} from '../../../types/Technology';
 import {Country} from '../../../types/Country';
 import {SortSetup} from '../../../types/SortSetup';
+import {Product} from '../../../types/Product';
 
 export enum RowsPerPage {
     FEW = 25,
@@ -16,8 +17,12 @@ export type TablesState = {
     chosenYear: number
 
     technologies: Technology[]
-    chosenTechnology: Technology | null
     currentTechnologiesPage: number
     rowsPerTechnologiesPage: RowsPerPage,
     technologiesSortSetup: SortSetup<Technology>
+
+    chosenTechnology: Technology | null
+    currentProductsPage: number
+    rowsPerProductsPage: RowsPerPage,
+    productsSortSetup: SortSetup<Product>
 }

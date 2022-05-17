@@ -1,0 +1,29 @@
+@import "../../mixins";
+.container {
+  padding: 1.5em 3.5em 0.75em 3.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1em;
+  @media (max-width: 500px) {
+    padding: 1.5em 1em 0.75em 1em;
+  }
+}
+.title {
+  font-size: 1.6em;
+  color: $secondary-color;
+}
+.return {
+  @include button;
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+.returnImage {
+  height: 1em;
+  width: 1em;
+  transform: rotate(90deg);
+}
+.returnLabel {
+
+}
