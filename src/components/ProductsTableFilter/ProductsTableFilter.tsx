@@ -2,11 +2,11 @@ import React from 'react';
 
 import styles from './ProductsTableFilter.module.scss';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
-import {setChosenTechnology} from '../../store/slices/tables';
 import arrow from '../../assets/dropdown.svg';
+import {setChosenTechnology} from '../../store/slices/products';
 
 const ProductsTableFilter: React.FC = () => {
-	const technology = useAppSelector(state => state.tables.chosenTechnology);
+	const technology = useAppSelector(state => state.products.chosenTechnology);
 	const dispatch = useAppDispatch();
 
 	return(<div className={styles.container}>

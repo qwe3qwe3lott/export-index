@@ -6,14 +6,14 @@ import notSorted from '../../assets/not-sorted.svg';
 import sorted from '../../assets/sorted.svg';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
 import {Product} from '../../types/Product';
-import {setProductsSortSetup} from '../../store/slices/tables';
+import {setSortSetup} from '../../store/slices/products';
 
 type Props = {
 	columnSetups: ColumnSetup<Product>[]
 }
 
 const ProductsTableHeader: React.FC<Props> = ({columnSetups}) => {
-	const sortSetup = useAppSelector(state => state.tables.productsSortSetup);
+	const sortSetup = useAppSelector(state => state.products.sortSetup);
 	const dispatch = useAppDispatch();
 
 	const getColumnWidth = useCallback((setup: ColumnSetup<Product>) => {
@@ -26,7 +26,7 @@ const ProductsTableHeader: React.FC<Props> = ({columnSetups}) => {
 			key={columnSetup.title}
 			style={getColumnWidth(columnSetup)}
 			onClick={() =>
-				dispatch(setProductsSortSetup({ property: columnSetup.property, sortAtoZ: (sortSetup.property === columnSetup.property ? !sortSetup.sortAtoZ : false)}))}
+				dispatch(setSortSetup({ property: columnSetup.property, sortAtoZ: (sortSetup.property === columnSetup.property ? !sortSetup.sortAtoZ : false)}))}
 		>
 			<span className={styles.title}>{columnSetup.title}</span>
 			{sortSetup.property === columnSetup.property ?

@@ -1,9 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
-import tablesReducer from './slices/tables';
+import technologiesReducer from './slices/technologies';
+import mergeReducer from './slices/merge';
+import productsReducer from './slices/products';
 
 const store = configureStore({
 	reducer: {
-		tables: tablesReducer
+		technologies: technologiesReducer,
+		products: productsReducer,
+		merge: mergeReducer
 	}
 });
 

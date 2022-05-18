@@ -2,13 +2,13 @@ import React, {useMemo} from 'react';
 
 import styles from './TechnologiesTableFooter.module.scss';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
-import {RowsPerPage} from '../../store/slices/tables/types';
-import {setRowsPerTechnologiesPage, setTechnologiesCurrentPage} from '../../store/slices/tables';
+import {RowsPerPage} from '../../enums/RowsPerPage';
+import {setCurrentPage, setRowsPerPage} from '../../store/slices/technologies';
 
 const TechnologiesTableFooter: React.FC = () => {
-	const totalRows = useAppSelector(state => state.tables.technologies.length);
-	const currentPage = useAppSelector(state => state.tables.currentTechnologiesPage);
-	const rowsPerPage = useAppSelector(state => state.tables.rowsPerTechnologiesPage);
+	const totalRows = useAppSelector(state => state.technologies.technologies.length);
+	const currentPage = useAppSelector(state => state.technologies.currentPage);
+	const rowsPerPage = useAppSelector(state => state.technologies.rowsPerPage);
 	const dispatch = useAppDispatch();
 
 	const totalPages: number = useMemo(() => {
@@ -45,7 +45,7 @@ const TechnologiesTableFooter: React.FC = () => {
 		<div className={styles.tools}>
 			<div className={styles.rowsPickerContainer}>
 				<p className={styles.rowsPickerLabel}>Rows per page:</p>
-				<select className={styles.rowsPicker} value={rowsPerPage} onChange={(event) => dispatch(setRowsPerTechnologiesPage(+event.target.value))}>
+				<select className={styles.rowsPicker} value={rowsPerPage} onChange={(event) => dispatch(setRowsPerPage(+event.target.value))}>
 					{rowsPerPageList.map(value => <option key={value}>
 						{value}
 					</option>)}
@@ -55,11 +55,11 @@ const TechnologiesTableFooter: React.FC = () => {
 				<button
 					className={[styles.pageChooserButton, styles.pageChooserPrevious].join(' ')}
 					disabled={isThisFirstPage}
-					onClick={() => dispatch(setTechnologiesCurrentPage(currentPage - 1))}
+					onClick={() => dispatch(setCurrentPage(currentPage - 1))}
 				/>
 				<select
 					className={styles.pageChooser}
-					onChange={(event) => dispatch(setTechnologiesCurrentPage(+event.target.value))}
+					onChange={(event) => dispatch(setCurrentPage(+event.target.value))}
 					value={currentPage}
 					disabled={isThisFirstPage && isThisLastPage}
 				>
@@ -73,7 +73,7 @@ const TechnologiesTableFooter: React.FC = () => {
 				<button
 					className={[styles.pageChooserButton, styles.pageChooserNext].join(' ')}
 					disabled={isThisLastPage}
-					onClick={() => dispatch(setTechnologiesCurrentPage(currentPage + 1))}
+					onClick={() => dispatch(setCurrentPage(currentPage + 1))}
 				/>
 			</div>
 		</div>

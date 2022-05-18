@@ -2,13 +2,13 @@ import React, {useMemo} from 'react';
 
 import styles from './ProductsTableFooter.module.scss';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
-import {RowsPerPage} from '../../store/slices/tables/types';
-import {setProductsCurrentPage, setRowsPerProductsPage} from '../../store/slices/tables';
+import {RowsPerPage} from '../../enums/RowsPerPage';
+import {setCurrentPage, setRowsPerPage} from '../../store/slices/products';
 
 const ProductsTableFooter: React.FC = () => {
-	const totalRows = useAppSelector(state => (state.tables.chosenTechnology ? state.tables.chosenTechnology.products.length : 0));
-	const currentPage = useAppSelector(state => state.tables.currentProductsPage);
-	const rowsPerPage = useAppSelector(state => state.tables.rowsPerProductsPage);
+	const totalRows = useAppSelector(state => (state.products.chosenTechnology ? state.products.chosenTechnology.products.length : 0));
+	const currentPage = useAppSelector(state => state.products.currentPage);
+	const rowsPerPage = useAppSelector(state => state.products.rowsPerPage);
 	const dispatch = useAppDispatch();
 
 	const totalPages: number = useMemo(() => {
@@ -45,7 +45,7 @@ const ProductsTableFooter: React.FC = () => {
 		<div className={styles.tools}>
 			<div className={styles.rowsPickerContainer}>
 				<p className={styles.rowsPickerLabel}>Rows per page:</p>
-				<select className={styles.rowsPicker} value={rowsPerPage} onChange={(event) => dispatch(setRowsPerProductsPage(+event.target.value))}>
+				<select className={styles.rowsPicker} value={rowsPerPage} onChange={(event) => dispatch(setRowsPerPage(+event.target.value))}>
 					{rowsPerPageList.map(value => <option key={value}>
 						{value}
 					</option>)}
@@ -55,11 +55,11 @@ const ProductsTableFooter: React.FC = () => {
 				<button
 					className={[styles.pageChooserButton, styles.pageChooserPrevious].join(' ')}
 					disabled={isThisFirstPage}
-					onClick={() => dispatch(setProductsCurrentPage(currentPage - 1))}
+					onClick={() => dispatch(setCurrentPage(currentPage - 1))}
 				/>
 				<select
 					className={styles.pageChooser}
-					onChange={(event) => dispatch(setProductsCurrentPage(+event.target.value))}
+					onChange={(event) => dispatch(setCurrentPage(+event.target.value))}
 					value={currentPage}
 					disabled={isThisFirstPage && isThisLastPage}
 				>
@@ -73,7 +73,7 @@ const ProductsTableFooter: React.FC = () => {
 				<button
 					className={[styles.pageChooserButton, styles.pageChooserNext].join(' ')}
 					disabled={isThisLastPage}
-					onClick={() => dispatch(setProductsCurrentPage(currentPage + 1))}
+					onClick={() => dispatch(setCurrentPage(currentPage + 1))}
 				/>
 			</div>
 		</div>

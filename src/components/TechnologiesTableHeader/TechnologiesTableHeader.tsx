@@ -6,14 +6,14 @@ import notSorted from '../../assets/not-sorted.svg';
 import sorted from '../../assets/sorted.svg';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
 import {Technology} from '../../types/Technology';
-import {setTechnologiesSortSetup} from '../../store/slices/tables';
+import {setSortSetup} from '../../store/slices/technologies';
 
 type Props = {
 	columnSetups: ColumnSetup<Technology>[]
 }
 
 const TechnologiesTableHeader: React.FC<Props> = ({columnSetups}) => {
-	const sortSetup = useAppSelector(state => state.tables.technologiesSortSetup);
+	const sortSetup = useAppSelector(state => state.technologies.sortSetup);
 	const dispatch = useAppDispatch();
 
 	const getColumnWidth = useCallback((setup: ColumnSetup<Technology>) => {
@@ -26,7 +26,7 @@ const TechnologiesTableHeader: React.FC<Props> = ({columnSetups}) => {
 			key={columnSetup.title}
 			style={getColumnWidth(columnSetup)}
 			onClick={() =>
-				dispatch(setTechnologiesSortSetup({ property: columnSetup.property, sortAtoZ: (sortSetup.property === columnSetup.property ? !sortSetup.sortAtoZ : false)}))}
+				dispatch(setSortSetup({ property: columnSetup.property, sortAtoZ: (sortSetup.property === columnSetup.property ? !sortSetup.sortAtoZ : false)}))}
 		>
 			<span className={styles.title}>{columnSetup.title}</span>
 			{sortSetup.property === columnSetup.property ?

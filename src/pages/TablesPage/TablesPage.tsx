@@ -6,7 +6,7 @@ import ProductsTableFilter from '../../components/ProductsTableFilter';
 import ProductsTable from '../../components/ProductsTable';
 
 const TablesPage: React.FC = () => {
-	const chosenTechnology = useAppSelector(state => state.tables.chosenTechnology);
+	const chosenTechnology = useAppSelector(state => state.products.chosenTechnology);
 	return (<section>
 		{!chosenTechnology ? <>
 			<TechnologiesTableFilter/>

@@ -11,9 +11,9 @@ type Props = {
 }
 
 const ProductsTableContent: React.FC<Props> = ({columnSetups}) => {
-	const products = useAppSelector(state => (state.tables.chosenTechnology ? state.tables.chosenTechnology.products : []));
-	const currentPage = useAppSelector(state => state.tables.currentProductsPage);
-	const rowsPerPage = useAppSelector(state => state.tables.rowsPerProductsPage);
+	const products = useAppSelector(state => (state.products.chosenTechnology ? state.products.chosenTechnology.products : []));
+	const currentPage = useAppSelector(state => state.products.currentPage);
+	const rowsPerPage = useAppSelector(state => state.products.rowsPerPage);
 
 	const getColumnWidth = useCallback((setup: ColumnSetup<Product>) => {
 		return setup.width ? { 'minWidth': `${setup.width.value}${ColumnWidthMetrics[setup.width.metric]}` } : { width: '100%' };
