@@ -22,7 +22,7 @@ const Header: React.FC = () => {
 	return (<header className={styles.header}>
 		<Link to={'/'} className={styles.logo}>
 			<img alt="logo" src={logo} className={styles.logoImage}/>
-			<h1 className={styles.logoTitle}>Export Index</h1>
+			<h1 className={styles.logoTitle}>International Technological Specialization Index</h1>
 		</Link>
 		<nav className={styles.nav}>
 			{navButtons.map((navButton) => (
