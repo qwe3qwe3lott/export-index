@@ -5,6 +5,7 @@ import {RootState} from '../../index';
 import {SortSetup} from '../../../types/SortSetup';
 import {Country} from '../../../types/Country';
 import {RowsPerPage} from '../../../enums/RowsPerPage';
+import {setTechnologies} from '../merge';
 
 const initialState: TechnologiesState = {
 	chosenCountry: -1,
@@ -75,13 +76,23 @@ const tablesSlice = createSlice({
 
 export const fetchTechnologies = createAsyncThunk<Technology[], undefined, {state: RootState, rejectValue: undefined }>(
 	'technologies/fetchTechnologies',
-	async function (_, {getState, rejectWithValue }) {
+	async function (_, {getState, dispatch, rejectWithValue }) {
 		const year: number = getState().technologies.chosenYear;
 		const country: Country | -1 = getState().technologies.chosenCountry;
 		if (!year || country === -1) return rejectWithValue(undefined);
+		const technologiesThrowYears = getState().merge.technologiesThrowYearsAndCountries[country.id];
+		console.log(technologiesThrowYears);
+		if (technologiesThrowYears) {
+			const technologies = technologiesThrowYears[year];
+			console.log(technologies);
+			if (technologies) return technologies;
+		}
 		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getExportIndexes?countryId=${country.id}&year=${year}`);
 		if (!response.ok) return rejectWithValue(undefined);
-		return await response.json() as Technology[];
+		const technologies = await response.json() as Technology[];
+		dispatch(setTechnologies({year, countryId: country.id, technologies}));
+		console.log(technologies);
+		return technologies;
 	},
 	{
 		condition: (_, {getState}): boolean => !!getState().technologies.chosenCountry && !!getState().technologies.chosenYear

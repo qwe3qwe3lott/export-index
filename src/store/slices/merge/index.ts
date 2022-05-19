@@ -1,17 +1,29 @@
 import {MergeState} from './types';
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../../index';
 import {Country} from '../../../types/Country';
+import {Technology} from '../../../types/Technology';
 
 const initialState: MergeState = {
 	countries: [],
-	years: []
+	years: [],
+
+	technologiesThrowYearsAndCountries: {}
 };
 
 const mergeSlice = createSlice({
 	name: 'merge',
 	initialState,
-	reducers: {},
+	reducers: {
+		setTechnologies(state, action: PayloadAction<{ year: number, countryId: number, technologies: Technology[] }>) {
+			let technologiesThrowYears = state.technologiesThrowYearsAndCountries[action.payload.countryId];
+			if (!technologiesThrowYears) {
+				state.technologiesThrowYearsAndCountries[action.payload.countryId] = {};
+				technologiesThrowYears = state.technologiesThrowYearsAndCountries[action.payload.countryId];
+			}
+			technologiesThrowYears[action.payload.year] = action.payload.technologies;
+		}
+	},
 	extraReducers(builder) {
 		builder
 			.addCase(fetchYears.fulfilled, ((state, action) => {
@@ -47,4 +59,5 @@ export const fetchCountries = createAsyncThunk<Country[], undefined, {state: Roo
 	}
 );
 
+export const {setTechnologies} = mergeSlice.actions;
 export default mergeSlice.reducer;

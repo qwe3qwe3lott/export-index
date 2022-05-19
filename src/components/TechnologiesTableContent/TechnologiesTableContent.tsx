@@ -59,7 +59,7 @@ const TechnologiesTableContent: React.FC<Props> = ({columnSetups}) => {
 		}
 	}, []);
 
-	return(<ul className={styles.container} ref={listRef}>
+	return(<ul className={[styles.container, (isLoading ? styles.loadingContainer : '')].join(' ')} ref={listRef}>
 		{isLoading ? <img className={styles.loading} alt={'loading ring'} src={loading}/> :
 			<>
 				{currentTechnologies.map(technology => <li
