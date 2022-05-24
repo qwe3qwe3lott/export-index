@@ -38,7 +38,7 @@ const mergeSlice = createSlice({
 export const fetchYears = createAsyncThunk<number[], undefined, {state: RootState}>(
 	'merge/fetchYears',
 	async function () {
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getYears`);
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getITSYears`);
 		if (!response.ok) return [];
 		return await response.json() as number[];
 	},
@@ -50,7 +50,7 @@ export const fetchYears = createAsyncThunk<number[], undefined, {state: RootStat
 export const fetchCountries = createAsyncThunk<Country[], undefined, {state: RootState}>(
 	'merge/fetchCountries',
 	async function () {
-		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getCountries`);
+		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getITSCountries`);
 		if (!response.ok) return [];
 		return await response.json() as Country[];
 	},
