@@ -1,9 +1,15 @@
-import React, {useMemo} from 'react';
+import React from 'react';
 
 import styles from './ProductsTableFooter.module.scss';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
-import {RowsPerPage} from '../../enums/RowsPerPage';
 import {setCurrentPage, setRowsPerPage} from '../../store/slices/products';
+import {
+	useFirstPageFlag,
+	useLastPageFlag, usePageInfo,
+	useRowsPerPageList,
+	useTotalPages,
+	useTotalPagesArray
+} from '../../hooks/tableHooks';
 
 const ProductsTableFooter: React.FC = () => {
 	const totalRows = useAppSelector(state => (state.products.chosenTechnology ? state.products.chosenTechnology.products.length : 0));
@@ -11,34 +17,16 @@ const ProductsTableFooter: React.FC = () => {
 	const rowsPerPage = useAppSelector(state => state.products.rowsPerPage);
 	const dispatch = useAppDispatch();
 
-	const totalPages: number = useMemo(() => {
-		const value = Math.ceil(totalRows / rowsPerPage);
-		// ProductsTable heeds to has at less one page
-		return value < 1 ? 1 : value;
-	}, [totalRows, rowsPerPage]);
+	const totalPages = useTotalPages(totalRows, rowsPerPage);
 
-	const isThisFirstPage: boolean = useMemo(() => 1 === currentPage, [currentPage]);
-	const isThisLastPage: boolean = useMemo(() => totalPages === currentPage, [totalPages, currentPage]);
+	const isThisFirstPage = useFirstPageFlag(currentPage);
+	const isThisLastPage = useLastPageFlag(currentPage, totalPages);
 
-	const pageInfo: string = useMemo(() => {
-		if (totalRows === 0) return '';
-		let lastPageRows: number = totalRows % rowsPerPage;
-		if (lastPageRows === 0) lastPageRows = rowsPerPage;
+	const pageInfo = usePageInfo(currentPage, totalRows, rowsPerPage, isThisLastPage);
 
-		const lastRowOnCurrentPage: number = isThisLastPage ? totalRows : currentPage * rowsPerPage;
-		const firstRowOnCurrentPage: number = lastRowOnCurrentPage - (isThisLastPage ? lastPageRows : rowsPerPage) + 1;
-		return `${firstRowOnCurrentPage}-${lastRowOnCurrentPage} of ${totalRows}`;
-	}, [totalRows, currentPage, rowsPerPage]);
+	const rowsPerPageList = useRowsPerPageList();
 
-	const rowsPerPageList: number[] = useMemo(() => {
-		let array: [string | RowsPerPage, string | RowsPerPage][] = Object.entries(RowsPerPage);
-		// First part of array contains duplicates
-		array = array.splice(0, array.length/2);
-		// There is necessity to get only enum values which are numbers
-		return array.map(el => el[0] as number);
-	}, []);
-
-	const totalPagesArray: number[] = useMemo(() => Array.from({length: totalPages}, (_, i) => i + 1), [totalPages]);
+	const totalPagesArray = useTotalPagesArray(totalPages);
 
 	return(<div className={styles.container}>
 		<p className={styles.pageInfo}>{pageInfo}</p>
@@ -73,7 +61,7 @@ const ProductsTableFooter: React.FC = () => {
 				<button
 					className={[styles.pageChooserButton, styles.pageChooserNext].join(' ')}
 					disabled={isThisLastPage}
-					onClick={() => dispatch(setCurrentPage(currentPage + 1))}
+					onClick={() => dispatch(setCurrentPage	(currentPage + 1))}
 				/>
 			</div>
 		</div>

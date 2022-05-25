@@ -81,17 +81,14 @@ export const fetchTechnologies = createAsyncThunk<Technology[], undefined, {stat
 		const country: Country | -1 = getState().technologies.chosenCountry;
 		if (!year || country === -1) return rejectWithValue(undefined);
 		const technologiesThrowYears = getState().merge.technologiesThrowYearsAndCountries[country.id];
-		console.log(technologiesThrowYears);
 		if (technologiesThrowYears) {
 			const technologies = technologiesThrowYears[year];
-			console.log(technologies);
 			if (technologies) return technologies;
 		}
 		const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}getITSIndexes?countryId=${country.id}&year=${year}`);
 		if (!response.ok) return rejectWithValue(undefined);
 		const technologies = await response.json() as Technology[];
 		dispatch(setTechnologies({year, countryId: country.id, technologies}));
-		console.log(technologies);
 		return technologies;
 	},
 	{

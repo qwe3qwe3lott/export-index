@@ -1,12 +1,13 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 
 import styles from './TechnologiesTableHeader.module.scss';
-import {ColumnSetup, ColumnWidthMetrics} from '../../types/ColumnSetup';
+import {ColumnSetup} from '../../types/ColumnSetup';
 import notSorted from '../../assets/not-sorted.svg';
 import sorted from '../../assets/sorted.svg';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
 import {Technology} from '../../types/Technology';
 import {setSortSetup} from '../../store/slices/technologies';
+import {useGetColumnWidth} from '../../hooks/tableHooks';
 
 type Props = {
 	columnSetups: ColumnSetup<Technology>[]
@@ -16,9 +17,7 @@ const TechnologiesTableHeader: React.FC<Props> = ({columnSetups}) => {
 	const sortSetup = useAppSelector(state => state.technologies.sortSetup);
 	const dispatch = useAppDispatch();
 
-	const getColumnWidth = useCallback((setup: ColumnSetup<Technology>) => {
-		return setup.width ? { 'minWidth': `${setup.width.value}${ColumnWidthMetrics[setup.width.metric]}` } : { width: '100%' };
-	}, []);
+	const getColumnWidth = useGetColumnWidth<Technology>();
 
 	return(<div className={styles.container}>
 		{columnSetups.map(columnSetup => <button

@@ -1,10 +1,11 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React from 'react';
 
 import styles from './ProductsTableContent.module.scss';
-import {ColumnSetup, ColumnWidthMetrics} from '../../types/ColumnSetup';
+import {ColumnSetup} from '../../types/ColumnSetup';
 import {useAppSelector} from '../../hooks/typedReduxHooks';
 
 import {Product} from '../../types/Product';
+import {useCurrentValues, useGetColumnWidth, useListRef} from '../../hooks/tableHooks';
 
 type Props = {
 	columnSetups: ColumnSetup<Product>[]
@@ -15,20 +16,11 @@ const ProductsTableContent: React.FC<Props> = ({columnSetups}) => {
 	const currentPage = useAppSelector(state => state.products.currentPage);
 	const rowsPerPage = useAppSelector(state => state.products.rowsPerPage);
 
-	const getColumnWidth = useCallback((setup: ColumnSetup<Product>) => {
-		return setup.width ? { 'minWidth': `${setup.width.value}${ColumnWidthMetrics[setup.width.metric]}` } : { width: '100%' };
-	}, []);
+	const getColumnWidth = useGetColumnWidth<Product>();
 
-	const currentProducts: Product[] = useMemo(() => {
-		const endIndex: number = currentPage * rowsPerPage;
-		return products.slice(endIndex - rowsPerPage, endIndex);
-	}, [currentPage, rowsPerPage, products]);
+	const currentProducts = useCurrentValues<Product>(currentPage, rowsPerPage, products);
 
-	const listRef = useRef<HTMLUListElement>(null);
-	useEffect(() => {
-		if (!listRef.current) return;
-		listRef.current.scrollTo(0, 0);
-	}, [currentPage]);
+	const listRef = useListRef(currentPage);
 
 	return(<ul className={styles.container} ref={listRef}>
 		{currentProducts.map(technology => <li key={technology.id} className={styles.element}>

@@ -4,8 +4,10 @@ import styles from './TechnologiesTable.module.scss';
 import TechnologiesTableHeader from '../TechnologiesTableHeader';
 import TechnologiesTableContent from '../TechnologiesTableContent';
 import TechnologiesTableFooter from '../TechnologiesTableFooter';
-import {ColumnModes, ColumnSetup, ColumnWidthMetrics} from '../../types/ColumnSetup';
+import {ColumnSetup} from '../../types/ColumnSetup';
 import {Technology} from '../../types/Technology';
+import {ColumnWidthMetrics} from '../../enums/ColumnWidthMetrics';
+import {ColumnModes} from '../../enums/ColumnModes';
 
 const TechnologiesTable: React.FC = () => {
 	const columnSetups: ColumnSetup<Technology>[] = [

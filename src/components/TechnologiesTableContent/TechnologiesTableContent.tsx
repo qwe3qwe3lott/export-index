@@ -1,13 +1,19 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React from 'react';
 
 import styles from './TechnologiesTableContent.module.scss';
-import {ColumnModes, ColumnSetup, ColumnWidthMetrics} from '../../types/ColumnSetup';
+import {ColumnSetup} from '../../types/ColumnSetup';
 import {useAppDispatch, useAppSelector} from '../../hooks/typedReduxHooks';
 import loading from '../../assets/loading.svg';
 
-import scssVariables from '../../variables.scss';
 import {Technology} from '../../types/Technology';
 import {setChosenTechnology} from '../../store/slices/products';
+import {
+	useCurrentValues,
+	useGetColumnWidth,
+	useGetModifiedStyles,
+	useListRef,
+	useModifyValue
+} from '../../hooks/tableHooks';
 
 type Props = {
 	columnSetups: ColumnSetup<Technology>[]
@@ -21,43 +27,15 @@ const TechnologiesTableContent: React.FC<Props> = ({columnSetups}) => {
 
 	const dispatch = useAppDispatch();
 
-	const getColumnWidth = useCallback((setup: ColumnSetup<Technology>) => {
-		return setup.width ? { 'minWidth': `${setup.width.value}${ColumnWidthMetrics[setup.width.metric]}` } : { width: '100%' };
-	}, []);
+	const getColumnWidth = useGetColumnWidth<Technology>();
 
-	const currentTechnologies: Technology[] = useMemo(() => {
-		const endIndex: number = currentPage * rowsPerPage;
-		return technologies.slice(endIndex - rowsPerPage, endIndex);
-	}, [currentPage, rowsPerPage, technologies]);
+	const currentTechnologies = useCurrentValues<Technology>(currentPage, rowsPerPage, technologies);
 
-	const listRef = useRef<HTMLUListElement>(null);
-	useEffect(() => {
-		if (!listRef.current) return;
-		listRef.current.scrollTo(0, 0);
-	}, [currentPage]);
+	const listRef = useListRef(currentPage);
 
-	const modifyValue = useCallback((value: Technology[keyof Technology], mode: ColumnModes | undefined) : Technology[keyof Omit<Technology, 'products'>] => {
-		switch (mode) {
-		case ColumnModes.SCORE:
-			if (!Array.isArray(value)) return value;
-			return value.length;
-		default:
-			if (Array.isArray(value)) return value.length;
-			return value;
-		}
-	}, []);
+	const modifyValue = useModifyValue<Technology, 'products'>();
 
-	const getModifyStyles = useCallback((value: Technology[keyof Technology], mode: ColumnModes | undefined) : object => {
-		if (value === null) return {};
-		switch (mode) {
-		case ColumnModes.SCORE:
-			if (!Array.isArray(value)) return {};
-			if (value.length > 0) return { color: scssVariables.seconradyColor };
-			return { color: scssVariables.secondaryOppositeColor };
-		default:
-			return {};
-		}
-	}, []);
+	const getModifiedStyles = useGetModifiedStyles<Technology>();
 
 	return(<ul className={[styles.container, (isLoading ? styles.loadingContainer : '')].join(' ')} ref={listRef}>
 		{isLoading ? <img className={styles.loading} alt={'loading ring'} src={loading}/> :
@@ -70,7 +48,7 @@ const TechnologiesTableContent: React.FC<Props> = ({columnSetups}) => {
 					{columnSetups.map(columnSetup => <span
 						key={columnSetup.title}
 						className={styles.span}
-						style={{...getColumnWidth(columnSetup), ...getModifyStyles(technology[columnSetup.property as keyof Technology], columnSetup.mode)}}
+						style={{...getColumnWidth(columnSetup), ...getModifiedStyles(technology[columnSetup.property as keyof Technology], columnSetup.mode)}}
 					>
 						{modifyValue(technology[columnSetup.property as keyof Technology], columnSetup.mode)}
 					</span>)}
