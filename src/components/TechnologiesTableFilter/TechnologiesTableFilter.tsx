@@ -50,7 +50,7 @@ const TechnologiesTableFilter: React.FC = () => {
 			</select>
 			<button
 				className={styles.search} onClick={() => dispatch(fetchTechnologies())}
-				disabled={(!chosenCountry || !chosenYear || isLoading)}
+				disabled={(chosenCountry === -1 || !chosenYear || isLoading)}
 			/>
 		</div>
 	</div>);
